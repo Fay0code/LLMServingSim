@@ -58,6 +58,9 @@ cannot use this path for scheduler capacity admission.
 `python -m serving.openonerec` runs an opt-in, standard-library policy/lifecycle
 model for three SID stages and fixed-width beams. The example uses explicitly
 uncalibrated synthetic timings; it does not change ordinary LLM scheduling.
+The separate `python -m serving.openonerec.astra_replay` command exports real
+Chakra stage graphs and supports isolated single-rank backend replay with
+explicitly synthetic durations. It is not concurrent policy-loop integration.
 See the [usage and integration limits](../docs/docs/simulator/openonerec.md).
 
 ## Layout

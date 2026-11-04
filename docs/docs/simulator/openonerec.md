@@ -14,8 +14,9 @@ The implementation separates user state and routing/retention policy
 (`state.py`, `simulator.py`), serving lifecycle/stage batching (`simulator.py`),
 and logical stage descriptions/timing providers (`timing.py`). It does not
 import AgentServeSim or claim to reuse that project's implementation. This
-first version has its own conservative byte accounting instead of integrating
-LLMServingSim's block pools, continuous scheduler or Chakra converter.
+policy loop has its own conservative byte accounting instead of integrating
+LLMServingSim's block pools or continuous scheduler. A separate serial replay
+command reuses its Chakra converter and Controller parser, as described below.
 
 ## Run the synthetic example
 
@@ -130,9 +131,52 @@ contention, calibrated history/batch/beam/top-k/reorder profiles, physical KV
 layout validation, and capacity comparison against OpenOneRec remain required
 before quantitative performance or speedup claims.
 
+## Actual Chakra export and serial backend replay
+
+A separate infrastructure check now reuses the existing `TraceData`,
+`GraphGenerator`, repository Chakra converter, and `Controller` report parser.
+With the standard simulator dependencies and the repository's Chakra fork
+installed, export three executable rank-zero `.et` protobuf files:
+
+```bash
+python -m serving.openonerec.astra_replay --synthetic \
+  --prefix-tokens 8 --beam-width 4 --output-dir outputs/openonerec_replay
+```
+
+Each graph contains one aggregate SID-stage compute node with an explicitly
+synthetic duration. The three separate graphs retain serial stage order;
+these are not calibrated per-kernel graphs. `replay.json` preserves stage shape,
+synthetic duration and generated file locations. This export was validated by
+decoding the actual Chakra protobuf nodes, not by treating JSON as a graph.
+
+To execute the serial replay using a **previously built** analytical backend,
+append these options to the same command:
+
+```bash
+--binary astra-sim/build/astra_analytical/build/AnalyticalAstra/bin/AnalyticalAstra \
+--system astra-sim/inputs/system/system.json \
+--network astra-sim/inputs/network/network.yml \
+--memory astra-sim/inputs/memory/no_memory_expansion.json
+```
+
+The runner requires `npus_count: [1]`, duration replay with roofline disabled,
+and three ordered rank-zero completion reports. It sends successive workload
+paths and `exit` through ASTRA's existing stdin protocol, parses stdout through
+`Controller`, and applies a wall-clock timeout. A failed build or missing binary
+is an error, never a synthetic fallback. The exported costs use the repository
+converter/backend's nanosecond convention despite the protobuf field's legacy
+`duration_micros` name.
+
+This is **serial infrastructure replay**, not integration of the policy event
+loop with the existing continuous scheduler. It has no transfer nodes or
+shared-link contention, and no measured OpenOneRec operation breakdown.
+Export/converter and parser/IPC-contract tests are available; mocked IPC tests
+do not validate execution of the C++ backend. C++ execution requires the normal
+ASTRA build toolchain, including CMake, protoc and protobuf development headers.
+
 ## Functional regression tests
 
-The permanent tests cover request compatibility, stage shapes, asynchronous
+The standard-library tests cover request compatibility, stage shapes, asynchronous
 publication, source recency, pinning, memory bounds, urgency with aging, causal
 arrival observations and estimator/execution separation. A deterministic
 randomized test covers 5,000 requests across 100 small capacity-limited runs.
@@ -141,6 +185,10 @@ Run from the repository root:
 ```bash
 python -m unittest discover -s serving/openonerec/tests -v
 ```
+
+Three additional integration-contract tests run when the simulator and Chakra
+dependencies are installed; otherwise they are explicitly skipped. They decode
+real generated graphs and test the actual Controller parser with mocked IPC.
 
 These tests validate policy invariants using synthetic timings. They do not
 replace the ordinary simulator's ASTRA regression suite or validate measured

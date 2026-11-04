@@ -15,6 +15,8 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) co
   remaining-budget stage batching and private fixed-beam KV accounting. Includes
   an explicitly synthetic example and isolated timing callback boundary; this
   does not establish calibrated OpenOneRec or concurrent ASTRA-Sim support.
+  A separate synthetic serial replay exports real Chakra graphs through the
+  existing graph generator and uses the Controller parser for backend reports.
   See the [scope and usage](https://llmservingsim.ai/docs/simulator/openonerec).
 
 ### Fixed

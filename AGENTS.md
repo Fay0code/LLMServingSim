@@ -135,8 +135,10 @@ scheduler.py → next iteration
 `serving/openonerec/` is an opt-in standard-library policy/lifecycle simulator.
 It does not modify the ordinary serving loop, block pools, or profile catalogs.
 Keep pure route estimates separate from admitted timing execution callbacks.
-Its synthetic timings and logical graphs are not calibrated profiles or Chakra
-traces. Preserve external arrivals, exact version/content prefix compatibility,
+Its synthetic timings and logical stage descriptions are not calibrated profiles
+or Chakra traces. The separate `astra_replay` exporter generates actual Chakra
+files via the existing graph generator; it remains serial synthetic infrastructure
+replay, not concurrent policy-loop integration. Preserve external arrivals, exact version/content prefix compatibility,
 private branch memory, source pinning, and completion-only writeback publication.
 See `docs/docs/simulator/openonerec.md` for the integration limits.
 
