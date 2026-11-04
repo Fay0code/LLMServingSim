@@ -1,6 +1,7 @@
 """Optional real-Chakra conversion and mocked IPC contracts, not backend accuracy."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -51,6 +52,25 @@ class AstraReplayContracts(unittest.TestCase):
             self.assertEqual(run.call_args.kwargs['input'], '\n'.join(
                 [s['workload'] for s in replay['stages'][1:]] + ['exit']) + '\n')
             self.assertEqual(run.call_args.kwargs['timeout'], 60)
+
+    @unittest.skipUnless(os.environ.get('OPENONEREC_ASTRA_BINARY'),
+                         'set OPENONEREC_ASTRA_BINARY to run the real backend smoke test')
+    def test_real_cpp_serial_replay(self):
+        repository = Path(__file__).resolve().parents[3]
+        inputs = repository / 'astra-sim' / 'inputs'
+        for prefix_tokens, beam_width in [(8, 4), (0, 1)]:
+            with self.subTest(prefix_tokens=prefix_tokens, beam_width=beam_width):
+                with tempfile.TemporaryDirectory() as directory:
+                    replay = export_synthetic_replay(directory, prefix_tokens, beam_width)
+                    result = run_serial_replay(
+                        replay, binary=os.environ['OPENONEREC_ASTRA_BINARY'],
+                        system=inputs / 'system/system.json',
+                        network=inputs / 'network/network.yml',
+                        memory=inputs / 'memory/no_memory_expansion.json')
+                    self.assertTrue(result['backend_executed'])
+                    self.assertFalse(result['calibrated'])
+                    self.assertEqual(result['observed_stage_ns'],
+                                     [stage['duration_ns'] for stage in replay['stages']])
 
     def test_non_single_rank_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

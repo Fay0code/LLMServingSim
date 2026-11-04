@@ -174,6 +174,22 @@ Export/converter and parser/IPC-contract tests are available; mocked IPC tests
 do not validate execution of the C++ backend. C++ execution requires the normal
 ASTRA build toolchain, including CMake, protoc and protobuf development headers.
 
+The optional real-backend smoke test executes two three-stage configurations
+against the built C++ executable and checks every stage duration against its
+explicit synthetic input. Enable it with:
+
+```bash
+OPENONEREC_ASTRA_BINARY="$PWD/astra-sim/build/astra_analytical/build/AnalyticalAstra/bin/AnalyticalAstra" \
+  python -m unittest discover -s serving/openonerec/tests -v
+```
+
+The normal simulator build needs `cmake`, `protobuf-compiler` and
+`libprotobuf-dev` (Debian package names), plus the recursive repository
+submodules and Python dependencies described in the installation guide.
+Successful synthetic replay proves the graph conversion, IPC, backend execution
+and report parser work together; it does not establish measured OpenOneRec
+latency or concurrent transfer behavior.
+
 ## Functional regression tests
 
 The standard-library tests cover request compatibility, stage shapes, asynchronous
@@ -186,9 +202,11 @@ Run from the repository root:
 python -m unittest discover -s serving/openonerec/tests -v
 ```
 
-Three additional integration-contract tests run when the simulator and Chakra
+Three additional graph/parser integration-contract tests run when the simulator and Chakra
 dependencies are installed; otherwise they are explicitly skipped. They decode
 real generated graphs and test the actual Controller parser with mocked IPC.
+The separate real-C++ smoke test is enabled only by the environment variable
+above; without it, that test is explicitly skipped.
 
 These tests validate policy invariants using synthetic timings. They do not
 replace the ordinary simulator's ASTRA regression suite or validate measured

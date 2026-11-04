@@ -82,7 +82,8 @@ def run_serial_replay(replay, *, binary, system, network, memory, timeout_second
                '--memory-configuration=' + str(paths['memory']),
                '--start-npu-ids=0', '--end-npu-ids=0']
     process = subprocess.run(command, input='\n'.join([s['workload'] for s in stages[1:]] + ['exit']) + '\n',
-                             text=True, capture_output=True, timeout=timeout_seconds, check=False)
+                             text=True, capture_output=True, timeout=timeout_seconds, check=False,
+                             cwd=str(Path(stages[0]['graph_path']).resolve().parent))
     if process.returncode:
         raise RuntimeError(f'ASTRA exited {process.returncode}: {process.stderr[-4000:]}')
     controller = Controller(1)
