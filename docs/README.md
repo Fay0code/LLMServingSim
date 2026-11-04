@@ -110,3 +110,6 @@ The GitHub Actions workflow in `.github/workflows/deploy-docs.yml` builds and
 deploys the site on documentation changes pushed to `main`. A feature-branch
 push does not deploy the public site. Do not publish a separate `gh-pages`
 branch with the generic Docusaurus deploy command.
+
+The [OpenOneRec policy guide](docs/simulator/openonerec.md) documents the
+opt-in synthetic frontend and its uncalibrated, isolated timing boundary.

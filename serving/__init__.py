@@ -1,8 +1,9 @@
 """LLMServingSim 2.0 — cycle-level LLM serving simulator.
 
 Python frontend that drives the ASTRA-Sim C++ backend. The top-level
-package only exposes the CLI (``python -m serving``); all simulator
-internals live under ``serving.core``.
+package exposes the ordinary CLI (``python -m serving``), whose simulator
+internals live under ``serving.core``. ``serving.openonerec`` is a separate,
+opt-in policy frontend with explicitly synthetic example timings.
 
 Module map:
     __main__.py                 simulation entry point + main loop

@@ -5,6 +5,10 @@ Request workloads consumed by `python -m serving --dataset <...>` and by
 top level; the `generators/` subpackage produces fresh ones on demand
 and the `examples/` folder ships ready-to-edit invocation templates.
 
+The separate `openonerec_synthetic.jsonl` example is consumed only by
+`python -m serving.openonerec`, not the ordinary LLM/bench loaders. See the
+[OpenOneRec schema](../docs/docs/simulator/openonerec.md#requests-and-arrivals).
+
 ## Layout
 
 ```text

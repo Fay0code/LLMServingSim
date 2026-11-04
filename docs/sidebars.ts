@@ -83,6 +83,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'simulator/architecture',
         'simulator/request-lifecycle',
+        'simulator/openonerec',
         {
           type: 'category',
           label: 'Scheduling',

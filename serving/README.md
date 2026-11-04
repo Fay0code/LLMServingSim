@@ -53,6 +53,13 @@ The catalog and source config are included, but no Kimi performance bundle
 is committed. Ordinary `python -m serving` has no duration-replay flag and
 cannot use this path for scheduler capacity admission.
 
+## OpenOneRec policy frontend
+
+`python -m serving.openonerec` runs an opt-in, standard-library policy/lifecycle
+model for three SID stages and fixed-width beams. The example uses explicitly
+uncalibrated synthetic timings; it does not change ordinary LLM scheduling.
+See the [usage and integration limits](../docs/docs/simulator/openonerec.md).
+
 ## Layout
 
 ```text

@@ -1,0 +1,19 @@
+{
+  "gpu_capacities": {"gpu0": 65536, "gpu1": 65536},
+  "cpu_capacity_bytes": 131072,
+  "beam_width": 4,
+  "kv_bytes_per_token": 256,
+  "scratch_bytes": 4096,
+  "max_batch_size": 4,
+  "half_life_ns": 100000,
+  "ttl_ns": 50000,
+  "writeback": true,
+  "synthetic_timing": {
+    "stage_base_ns": 1000,
+    "query_ns": 100,
+    "prefix_token_ns": 200,
+    "attention_token_ns": 1,
+    "transfer_base_ns": 100,
+    "bytes_per_ns": 16
+  }
+}

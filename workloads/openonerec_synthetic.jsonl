@@ -1,0 +1,5 @@
+{"request_id":"r0","user_id":"alice","model_version":"demo-v1","prefix_version":"history-1","prefix_token_ids":[1,2,3,4,5,6,7,8],"arrival_time_ns":0,"budget_ns":10000}
+{"request_id":"r1","user_id":"alice","model_version":"demo-v1","prefix_version":"history-1","prefix_token_ids":[1,2,3,4,5,6,7,8],"arrival_time_ns":100,"budget_ns":10000}
+{"request_id":"r2","user_id":"bob","model_version":"demo-v1","prefix_version":"history-1","prefix_token_ids":[9,10,11,12],"arrival_time_ns":200,"budget_ns":10000}
+{"request_id":"r3","user_id":"alice","model_version":"demo-v1","prefix_version":"history-1","prefix_token_ids":[1,2,3,4,5,6,7,8],"arrival_time_ns":12000,"budget_ns":10000}
+{"request_id":"r4","user_id":"alice","model_version":"demo-v1","prefix_version":"history-2","prefix_token_ids":[1,2,3,4,5,6,7,8,13],"arrival_time_ns":15000,"budget_ns":10000}

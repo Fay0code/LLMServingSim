@@ -5,6 +5,15 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) co
 
 ## [Unreleased]
 
+### Added
+
+- Add an opt-in OpenOneRec policy frontend for external arrivals, compatible
+  prefix reuse, joint routing/acquisition, tier retention, asynchronous writeback,
+  remaining-budget stage batching and private fixed-beam KV accounting. Includes
+  an explicitly synthetic example and isolated timing callback boundary; this
+  does not establish calibrated OpenOneRec or concurrent ASTRA-Sim support.
+  See the [scope and usage](https://llmservingsim.ai/docs/simulator/openonerec).
+
 ### Fixed
 
 - Delay an ASTRA-Sim instance's tail-rank completion report until every rank

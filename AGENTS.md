@@ -130,6 +130,16 @@ ASTRA-Sim (C++) → cycle count
 scheduler.py → next iteration
 ```
 
+## OpenOneRec policy frontend
+
+`serving/openonerec/` is an opt-in standard-library policy/lifecycle simulator.
+It does not modify the ordinary serving loop, block pools, or profile catalogs.
+Keep pure route estimates separate from admitted timing execution callbacks.
+Its synthetic timings and logical graphs are not calibrated profiles or Chakra
+traces. Preserve external arrivals, exact version/content prefix compatibility,
+private branch memory, source pinning, and completion-only writeback publication.
+See `docs/docs/simulator/openonerec.md` for the integration limits.
+
 ## Code Style & Formatting
 
 - **Python**: 4-space indentation, snake_case for functions/variables, PascalCase for classes
