@@ -80,6 +80,123 @@ responses report deadline misses. No request is dropped. Urgency changes stage s
 FCFS to protect memory-starved older requests. Waiting time is measured from
 external arrival to the first stage start, including acquisition and queueing.
 
+## Policy-search interface
+
+`PolicyEnvironment` is an additive reset/step interface. The legacy CLI and
+`Simulator.run()` retain their automatic routing, acquisition and slack-aware
+batching policy. A policy callback receives an immutable `Observation`, containing
+only arrived requests, observed user rates, current memory/copy state, ready
+work and legal actions. It receives neither the future workload nor the event
+queue, next arrival time, backend clock, or scheduled batch completion time.
+Episode termination necessarily reveals that no more trace arrivals remain;
+this is an offline rollout boundary, not a production end-of-stream predictor.
+
+```python
+from serving.openonerec.policy import PolicyEnvironment, FCFSReferencePolicy
+from serving.openonerec.state import RecRequest
+from serving.openonerec.timing import SyntheticTiming
+
+requests = [RecRequest("r0", "u0", "model-v1", "prefix-v1", (1, 2, 3), 0)]
+env = PolicyEnvironment({"gpu0": 1_000_000}, SyntheticTiming(),
+                        beam_width=8, kv_bytes_per_token=1024)
+policy = FCFSReferencePolicy()
+observation = env.reset(requests, seed=7)
+while not observation.done:
+    observation = env.step(policy(observation)).observation
+result = env.result()
+```
+
+The reference policy routes to the least populated visible queue, prefers
+compatible local/remote/CPU copies, and launches singleton FCFS batches. It is
+not an alias for the legacy policy and makes no optimization claim.
+
+- `RouteAction(request_id, destination)` selects an existing GPU. Routing does
+  not allocate memory, pin a source, transfer a prefix or launch a stage.
+- `AcquireAction(request_id, mode, source=None)` chooses exact acquisition at
+  admission. Modes are `recompute`, `local`, `remote` and `cpu_reload`. The
+  source must be currently ready and exactly prefix-compatible. Recompute has
+  no source. Memory admission accounts for retained copies, private prefix and
+  branch/scratch bytes; pinned and pending copies cannot be evicted.
+- `BatchAction(destination, request_ids)` launches a nonempty, unique tuple of
+  ready requests on an idle GPU, all at the same SID stage, within
+  `max_batch_size`. `observation.legal_actions` enumerates singleton batches;
+  policies may construct larger batches and call `env.validate(action)`.
+- `WaitAction(until_ns=None)` advances to the earliest event, aging boundary or
+  bounded timer. The absolute timer must be strictly in the future and within
+  `max_wait_ns` (default one second). Omitting it uses `now + max_wait_ns`, even
+  when no external event is queued, so action legality does not expose future
+  arrival existence. Every wake drains simultaneous arrivals and completions.
+
+Admission is FCFS in each destination queue. The oldest aged unrouted request
+must route first, and a batch must include the oldest aged ready request on its
+GPU. Waiting is rejected while any aged work has a feasible progress action;
+waiting otherwise stops at the first such work's aging threshold. Policies can
+still fail, return illegal actions or run indefinitely before completing a
+workload; use the evaluation step limit rather than assuming arbitrary policies
+terminate. No bounded latency is promised under overload.
+
+`validate()` and `observe()` never call execution callbacks or mutate memory.
+`estimate(action)` uses only the timing provider's pure estimation callbacks:
+routes estimate three recompute stages without queue delay, acquisitions estimate
+transport only, and batches estimate their exact logical stage. Wait duration
+cannot be estimated because its next external event is not causal information.
+Only admitted acquisitions, batches and writebacks execute timing callbacks.
+Backend callback failures propagate; discard the episode rather than assuming
+an external backend operation can be rolled back.
+
+`reset()` constructs fresh lifecycle state and a local seeded RNG. A stochastic
+policy should also use its own seed-local RNG; resetting this environment does
+not reset an external timing backend. `result()` is available after all responses
+and writebacks drain and returns detached JSON-compatible data, including the
+seed and ordered accepted decisions (action arguments and before/after time).
+Invalid actions raise `IllegalAction` without changing the episode.
+
+### Reproducible evaluation and metrics
+
+`evaluate_policy()` creates a fresh environment and callable policy for each
+seed. Metadata is caller-declared; include all environment options, policy
+parameters, code revision and timing/calibration identity. SHA-256 digests bind
+that metadata and the ordered input workload, not the truth of calibration claims.
+
+```python
+from serving.openonerec.evaluation import evaluate_policy
+
+config = {"gpu_capacities": {"gpu0": 1_000_000},
+          "beam_width": 8, "kv_bytes_per_token": 1024}
+report = evaluate_policy(
+    lambda: PolicyEnvironment(config["gpu_capacities"], SyntheticTiming(),
+                              beam_width=config["beam_width"],
+                              kv_bytes_per_token=config["kv_bytes_per_token"]),
+    lambda seed: FCFSReferencePolicy(), requests,
+    seeds=[7, 11, 19], config=config,
+    policy_metadata={"name": "fcfs-reference", "version": 1},
+    timing_metadata={"name": "SyntheticTiming", "calibrated": False},
+    max_steps=100000,
+)
+```
+
+Reports retain every seed's responses, lifecycle events, decisions and metrics.
+Identical deterministic inputs reproduce identical reports. Invalid actions,
+backend exceptions and step-limit failures raise errors, never become successful
+samples. No reward weights or policy optimizer are selected automatically.
+
+- Latency is response minus external arrival; waiting ends at first stage start.
+  P50/P95/P99 use linear interpolation at `(n - 1) * percentile`.
+- Throughput uses first offered arrival to last response, excluding writeback
+  drain. Goodput counts only positive-budget requests completing on time in that
+  window. Zero-duration windows yield undefined (`null`) rates.
+- SLO success divides on-time completions by all offered positive-budget requests;
+  unbudgeted requests are excluded. An absent budget population yields `null`.
+- Per-user completion and SLO fractions include users with no completions.
+  Jain indices compare these fractions, rather than favoring high-volume users
+  through raw completion counts. All-zero fractions yield an undefined index.
+- Cache reuse uses completed acquisitions, not tentative route choices.
+  Per-tier peak bytes, eviction counts and writeback drain time remain separate.
+
+These definitions support repeatable functional comparisons, not measured
+OpenOneRec performance claims. Use a separate calibrated timing contract and
+real-system validation before treating synthetic policy differences as speedups.
+
 ## KV ownership and retention
 
 GPU and CPU capacities are explicit bytes. One public prefix copy per key per
@@ -98,7 +215,8 @@ while reading it. Multiple requests can hold the same public GPU prefix;
 private recomputation workspaces are charged separately until publication.
 When capacity is needed, only ready, unpinned copies can be evicted, ordered
 by decayed user arrival rate and then recency. `ttl_ns` additionally invalidates
-idle unpinned copies on lookup; zero disables TTL. Old versions may remain
+idle unpinned copies for lookup; zero disables TTL. Validity queries are pure;
+expiration/removal occurs in explicit lifecycle maintenance. Old versions may remain
 until eviction but cannot satisfy a new version's request.
 
 Responses and writebacks are separate events. An optional GPU-to-CPU writeback

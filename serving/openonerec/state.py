@@ -96,10 +96,26 @@ class Directory:
         if copy is None or not copy.ready:
             return None
         if self.ttl_ns and now - copy.last_used_ns >= self.ttl_ns and not copy.pins:
-            del self.copies[(key, location)]
-            self.evictions += 1
             return None
         return copy
+
+    def expire(self, now, key=None, location=None):
+        """Explicit maintenance; validity queries must never mutate directory state."""
+        expired = [identity for identity, copy in self.copies.items()
+                   if (key is None or copy.key == key)
+                   and (location is None or copy.location == location)
+                   and copy.ready and not copy.pins and self.ttl_ns
+                   and now - copy.last_used_ns >= self.ttl_ns]
+        for identity in expired:
+            del self.copies[identity]
+        self.evictions += len(expired)
+
+    def can_fit(self, location, size_bytes, protected=None):
+        """Pure admission test, accounting for evictable retained copies."""
+        evictable = sum(c.size_bytes for c in self.copies.values()
+                        if c.location == location and c.ready and not c.pins
+                        and c is not protected)
+        return self.used(location) - evictable + size_bytes <= self.capacities[location]
 
     def make_room(self, location, size_bytes, now):
         candidates = sorted(

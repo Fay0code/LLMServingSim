@@ -87,6 +87,7 @@ class Simulator:
     def _choices(self, request, destination):
         yield 'recompute', None, 0
         for location in self.directory.capacities:
+            self.directory.expire(self.now, request.prefix_key, location)
             if self.directory.valid(request.prefix_key, location, self.now):
                 if location == destination:
                     yield 'local', location, 0
@@ -115,18 +116,22 @@ class Simulator:
         self.records.append(dict(event='route', time_ns=self.now, request_id=request.request_id,
                                  destination=destination, mode=mode))
 
-    def _allocate(self, work):
+    def _allocate(self, work, acquisition=None):
         request, destination = work.request, work.destination
         key = request.prefix_key
         # Re-evaluate the joint acquisition mode at admission: queued copies may
         # have been evicted, or a prior same-user request may have published one.
-        modes = []
-        for mode, source, delay in self._choices(request, destination):
-            candidate = Work(request, destination, mode, source)
-            cost = delay + self._duration(destination, self._graph(0, [candidate]), estimate=True)
-            modes.append((cost, mode, source or '', delay))
-        _, work.mode, source, delay = min(modes)
-        work.source = source or None
+        if acquisition is None:
+            modes = []
+            for mode, source, delay in self._choices(request, destination):
+                candidate = Work(request, destination, mode, source)
+                cost = delay + self._duration(destination, self._graph(0, [candidate]), estimate=True)
+                modes.append((cost, mode, source or '', delay))
+            _, work.mode, source, delay = min(modes)
+            work.source = source or None
+        else:
+            work.mode, work.source = acquisition
+            source = work.source
         copy = self.directory.valid(key, source, self.now) if source else None
         if copy:
             copy.pins += 1  # Pin source before eviction for target capacity.
@@ -159,6 +164,7 @@ class Simulator:
         if work.prefix_copy is not None:
             return
         directory, key, destination = self.directory, work.request.prefix_key, work.destination
+        directory.expire(self.now, key, destination)
         existing = directory.valid(key, destination, self.now)
         if existing:
             existing.pins += 1
@@ -183,6 +189,7 @@ class Simulator:
         source = work.prefix_copy
         if not self.writeback or source is None or not self.directory.capacities['cpu']:
             return
+        self.directory.expire(self.now, source.key, 'cpu')
         if self.directory.valid(source.key, 'cpu', self.now):
             return
         copy = self.directory.reserve(source.key, 'cpu', source.size_bytes, self.now)
