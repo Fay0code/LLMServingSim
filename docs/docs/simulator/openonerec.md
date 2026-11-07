@@ -41,12 +41,15 @@ Each JSONL row requires `request_id`, `user_id`, `model_version`,
 `prefix_version`, `prefix_token_ids` and `arrival_time_ns`. IDs and versions
 are nonempty strings; tokens and timestamps are nonnegative integers.
 `budget_ns` is optional: zero means no budget. Request IDs must be unique.
+Optional positive `beam_rows` overrides the configured beam width per request.
 
 Ordinary requests enter on their external arrival timestamps. A same-user
 request is not a causal successor and can overlap a preceding request.
 Compatibility requires the user, model version, prefix version **and actual
-prefix token content** to agree. This first implementation matches a whole
-prefix exactly, not partial prefixes. Callers must identify all model,
+leading prefix token content** to agree. The longest valid matching leading
+prefix can be reused; stage zero computes only its missing suffix while
+attention retains the full context. Copies without token metadata support
+exact-key reuse only. Callers must identify all model,
 tokenizer, positional-encoding and adapter changes in `model_version`; token
 IDs alone do not certify compatibility across those changes.
 
@@ -65,13 +68,22 @@ is a configurable research baseline, not an optimal completion predictor.
 The acquisition mode is re-evaluated at admission because queued copies may
 be evicted or newly published. The destination remains fixed after routing.
 
-Each GPU executes one stage batch at a time. Only ready requests of the same
-SID stage can batch together. Allocation proceeds in arrival order; if an
+Each GPU executes one admitted batch at a time. The default `stage` mode groups
+ready requests at the same SID stage. `wave` permits mixed stages, decomposed
+into serial homogeneous stage/beam-width launches, without inferred fusion or
+overlap. `fixed_step` admits requests at stage zero and executes all three
+SID stages before releasing the batch. `max_batch_size`, optional
+`max_batch_rows` and `max_batch_tokens` bound each batch; token capacity counts
+reserved beam rows times full prefix length plus three positions, not resident
+shared-prefix KV bytes. `max_active_requests` optionally limits admitted work
+per GPU. These options are available through the Python constructor.
+
+Allocation proceeds in arrival order; if an
 older unallocated request cannot fit, newer unallocated requests cannot jump
 it. Already allocated work may continue to free capacity. Ready-stage selection prioritizes estimated remaining-budget slack. Requests
 whose age reaches `aging_threshold_ns` (default one second) take precedence in
 arrival order, protecting cold or budgetless work from repeated deadline-driven
-bypass. Batches remain stage-specific. Arrival rate never promotes a hot request ahead of a cold
+bypass. Arrival rate never promotes a hot request ahead of a cold
 one. This policy avoids priority starvation for finite, feasible workloads,
 without claiming bounded latency under sustained overload.
 
@@ -79,6 +91,16 @@ without claiming bounded latency under sustained overload.
 responses report deadline misses. No request is dropped. Urgency changes stage selection only; admission remains
 FCFS to protect memory-starved older requests. Waiting time is measured from
 external arrival to the first stage start, including acquisition and queueing.
+
+## Timing profiles and automatic search
+
+[Timing profiles](./openonerec-profiles.md) document measured/fixture provenance,
+exact lookup, bounded interpolation and missing-coverage errors.
+[Offline policy search](./openonerec-search.md) documents routing/acquisition/
+batching grids, tuning-only selection and holdout evaluation. The search CLI
+requires an explicit choice of `--synthetic` or `--timing-profile`; profile-backed
+reports retain the selected profile hash, data kind and producer provenance.
+Neither a profile label nor search improvement certifies serving accuracy.
 
 ## Policy-search interface
 
@@ -114,12 +136,12 @@ not an alias for the legacy policy and makes no optimization claim.
   not allocate memory, pin a source, transfer a prefix or launch a stage.
 - `AcquireAction(request_id, mode, source=None)` chooses exact acquisition at
   admission. Modes are `recompute`, `local`, `remote` and `cpu_reload`. The
-  source must be currently ready and exactly prefix-compatible. Recompute has
+  source must be currently ready and have compatible leading prefix tokens. Recompute has
   no source. Memory admission accounts for retained copies, private prefix and
   branch/scratch bytes; pinned and pending copies cannot be evicted.
 - `BatchAction(destination, request_ids)` launches a nonempty, unique tuple of
-  ready requests on an idle GPU, all at the same SID stage, within
-  `max_batch_size`. `observation.legal_actions` enumerates singleton batches;
+  ready requests on an idle GPU, subject to the selected execution mode and
+  request, row and token limits. `observation.legal_actions` enumerates singleton batches;
   policies may construct larger batches and call `env.validate(action)`.
 - `WaitAction(until_ns=None)` advances to the earliest event, aging boundary or
   bounded timer. The absolute timer must be strictly in the future and within

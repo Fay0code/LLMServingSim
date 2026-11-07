@@ -4,8 +4,8 @@ A request has exactly three SID prediction stages and two beam expansion
 rounds. Stage 0 uses one query; stages 1 and 2 each use ``beam_width`` queries.
 The prefix is shared across those queries, never multiplied into private KV.
 Prefix acquisition is a separate operation, not a fourth SID stage. Stage 0
-includes prefix prefill when its acquisition mode is ``recompute``; transferred
-or cached prefixes must already be available before stage execution.
+includes prefill for the missing prefix suffix; transferred or cached leading
+tokens must already be available before stage execution.
 
 These descriptions are not executable Chakra traces. A real ASTRA integration
 must lower them to supported, calibrated operations and run the resulting
@@ -40,7 +40,8 @@ class StageGraph:
     counts all queries for a request. ``prefix_tokens`` counts its shared
     prefix once. ``kv_mode`` records how that prefix is acquired by the caller.
     The caller must finish transfer/cache acquisition before the SID stage.
-    Stage 0 includes a separate prefix-prefill operation for ``recompute``.
+    Stage 0 prefills ``prefix_tokens - cached_prefix_tokens`` missing tokens.
+    Missing-token counts do not shorten the full attention context.
     """
 
     stage: int
@@ -49,6 +50,7 @@ class StageGraph:
     prefix_tokens: tuple[int, ...]
     query_tokens: tuple[int, ...]
     kv_mode: tuple[str, ...]
+    cached_prefix_tokens: tuple[int, ...] = None
 
     def __post_init__(self) -> None:
         _integer(self.stage, "stage")
@@ -60,6 +62,17 @@ class StageGraph:
             values = getattr(self, name)
             if not isinstance(values, tuple) or len(values) != self.batch_size:
                 raise ValueError(f"{name} must be a tuple of batch_size entries")
+        if self.cached_prefix_tokens is None:
+            object.__setattr__(self, "cached_prefix_tokens", tuple(
+                0 if mode == "recompute" else prefix
+                for prefix, mode in zip(self.prefix_tokens, self.kv_mode)))
+        if (not isinstance(self.cached_prefix_tokens, tuple)
+                or len(self.cached_prefix_tokens) != self.batch_size):
+            raise ValueError("cached_prefix_tokens must be a tuple of batch_size entries")
+        for prefix, cached, mode in zip(self.prefix_tokens, self.cached_prefix_tokens, self.kv_mode):
+            _integer(cached, "cached_prefix_tokens entry")
+            if cached > prefix or (mode == "recompute" and cached):
+                raise ValueError("cached prefix must fit the prefix and be zero for recompute")
         expected_queries = 1 if self.stage == 0 else self.beam_width
         for prefix, queries, mode in zip(
             self.prefix_tokens, self.query_tokens, self.kv_mode
@@ -86,10 +99,10 @@ class StageGraph:
 
     @property
     def prefix_prefill_tokens(self) -> tuple[int, ...]:
-        """Prefix tokens recomputed once before the first SID query."""
+        """Missing prefix tokens computed once before the first SID query."""
         return tuple(
-            prefix if self.stage == 0 and mode == "recompute" else 0
-            for prefix, mode in zip(self.prefix_tokens, self.kv_mode)
+            prefix - cached if self.stage == 0 else 0
+            for prefix, cached in zip(self.prefix_tokens, self.cached_prefix_tokens)
         )
 
     @property
@@ -107,6 +120,7 @@ class StageGraph:
             "prefix_tokens": self.prefix_tokens,
             "query_tokens": self.query_tokens,
             "kv_mode": self.kv_mode,
+            "cached_prefix_tokens": self.cached_prefix_tokens,
             "prefix_prefill_tokens": self.prefix_prefill_tokens,
             "prerequisite": "finish_prefix_transfer_or_cache_acquisition",
             "operations": (
@@ -126,6 +140,7 @@ def build_stage_graph(
     prefix_tokens: Sequence[int],
     beam_width: int,
     kv_modes: Sequence[str],
+    *, cached_prefix_tokens: Sequence[int] = None,
 ) -> StageGraph:
     """Build and validate one nonempty fixed-shape batch from request metadata."""
     _integer(stage, "stage")
@@ -137,7 +152,8 @@ def build_stage_graph(
     prefixes = tuple(prefix_tokens)
     modes = tuple(kv_modes)
     queries = (1 if stage == 0 else beam_width,) * len(prefixes)
-    return StageGraph(stage, len(prefixes), beam_width, prefixes, queries, modes)
+    return StageGraph(stage, len(prefixes), beam_width, prefixes, queries, modes,
+                      None if cached_prefix_tokens is None else tuple(cached_prefix_tokens))
 
 
 @runtime_checkable
@@ -232,8 +248,8 @@ class AstraTiming:
     Neither callback may substitute raw graph-description JSON for executable
     Chakra input. The caller owns calibration, topology and time-unit conversion;
     this adapter validates results but does not certify those integration facts.
-    Stage-0 execution must include shared-prefix prefill for requests whose
-    mode is ``recompute`` (see ``graph.prefix_prefill_tokens``). Other prefix
+    Stage-0 execution must include missing-prefix prefill, including partial
+    cache hits (see ``graph.prefix_prefill_tokens``). Cached leading-token
     acquisition is completed separately before stage execution.
     """
 

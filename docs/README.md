@@ -113,3 +113,7 @@ branch with the generic Docusaurus deploy command.
 
 The [OpenOneRec policy guide](docs/simulator/openonerec.md) documents the
 opt-in synthetic frontend and its uncalibrated, isolated timing boundary.
+
+The [search guide](docs/simulator/openonerec-search.md) covers offline policy
+selection; the [profile guide](docs/simulator/openonerec-profiles.md) describes
+timing lookup, provenance and coverage limits.

@@ -20,6 +20,7 @@ class RecRequest:
     prefix_token_ids: tuple
     arrival_time_ns: int
     budget_ns: int = 0
+    beam_rows: int = None
 
     def __post_init__(self):
         for name in ('request_id', 'user_id', 'model_version', 'prefix_version'):
@@ -30,6 +31,8 @@ class RecRequest:
             nonnegative_int(token, 'prefix token')
         nonnegative_int(self.arrival_time_ns, 'arrival_time_ns')
         nonnegative_int(self.budget_ns, 'budget_ns')
+        if self.beam_rows is not None and nonnegative_int(self.beam_rows, 'beam_rows') == 0:
+            raise ValueError('beam_rows must be positive')
 
     @property
     def prefix_key(self):
@@ -70,6 +73,7 @@ class Copy:
     ready: bool
     last_used_ns: int
     pins: int = 0
+    prefix_token_ids: tuple = None
 
 
 class Directory:
@@ -99,6 +103,31 @@ class Directory:
             return None
         return copy
 
+    def best_prefix(self, request, location, now):
+        """Longest exact leading-token match in the same user/model/version.
+
+        Legacy copies without token metadata remain exact-key-only. Pending or
+        expired copies cannot establish reusable content. A digest alone never
+        establishes a partial match.
+        """
+        exact = self.valid(request.prefix_key, location, now)
+        if exact is not None:
+            return exact, len(request.prefix_token_ids)
+        best, count = None, 0
+        for copy in self.copies.values():
+            if (copy.location != location or copy.key[:3] != request.prefix_key[:3]
+                    or copy.prefix_token_ids is None
+                    or self.valid(copy.key, location, now) is None):
+                continue
+            matched = 0
+            for left, right in zip(copy.prefix_token_ids, request.prefix_token_ids):
+                if left != right:
+                    break
+                matched += 1
+            if matched > count:
+                best, count = copy, matched
+        return best, count
+
     def expire(self, now, key=None, location=None):
         """Explicit maintenance; validity queries must never mutate directory state."""
         expired = [identity for identity, copy in self.copies.items()
@@ -127,12 +156,13 @@ class Directory:
             self.evictions += 1
         return self.used(location) + size_bytes <= self.capacities[location]
 
-    def reserve(self, key, location, size_bytes, now):
+    def reserve(self, key, location, size_bytes, now, prefix_token_ids=None):
         if (key, location) in self.copies:
             return None
         if not self.make_room(location, size_bytes, now):
             return None
-        copy = Copy(key, location, size_bytes, False, now)
+        copy = Copy(key, location, size_bytes, False, now,
+                    prefix_token_ids=None if prefix_token_ids is None else tuple(prefix_token_ids))
         self.copies[(key, location)] = copy
         self.record_peak(location)
         return copy

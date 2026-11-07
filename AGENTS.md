@@ -140,6 +140,9 @@ or Chakra traces. The separate `astra_replay` exporter generates actual Chakra
 files via the existing graph generator; it remains serial synthetic infrastructure
 replay, not concurrent policy-loop integration. Preserve external arrivals, exact version/content prefix compatibility,
 private branch memory, source pinning, and completion-only writeback publication.
+Keep stage, mixed-wave and fixed-step execution explicit; partial prefix reuse
+requires leading-token equality within the same user/model/prefix version.
+Search selects on tuning data only. Profile ingestion does not certify accuracy.
 See `docs/docs/simulator/openonerec.md` for the integration limits.
 
 ## Code Style & Formatting

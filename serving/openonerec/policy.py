@@ -55,6 +55,7 @@ class RequestObservation:
     ready: bool = False
     age_ns: int = 0
     remaining_budget_ns: int = None
+    cached_prefix_tokens: int = 0
 
 
 @dataclass(frozen=True)
@@ -66,6 +67,7 @@ class CopyObservation:
     valid: bool
     pins: int
     last_used_ns: int
+    prefix_token_ids: tuple = None
 
 
 @dataclass(frozen=True)
@@ -95,6 +97,11 @@ class Observation:
     legal_actions: tuple
     completed_request_ids: tuple
     done: bool
+    execution_mode: str = 'stage'
+    max_batch_size: int = 8
+    max_batch_rows: int = None
+    max_batch_tokens: int = None
+    beam_width: int = 8
 
 
 @dataclass(frozen=True)
@@ -111,7 +118,7 @@ class PolicyEnvironment:
     """Resettable event-driven environment, independent of Simulator.run policy.
 
     Route chooses a GPU, acquire chooses an exact current prefix source, and
-    batch chooses an explicit same-stage set. Admission is FCFS per device;
+    batch chooses an explicit ready set under the configured execution mode. Admission is FCFS per device;
     aged ready work must be included before younger work on that device. Waiting
     cannot skip an aged action that is currently feasible. legal_actions lists
     legal singleton batches; larger batches can be checked with validate().
@@ -137,8 +144,10 @@ class PolicyEnvironment:
             raise ValueError('request_id values must be unique')
         self._sim = Simulator(self._capacities, self._timing, **self._options)
         for request in requests:
-            peak = ((len(request.prefix_token_ids) + 3 * self._sim.beam_width)
-                    * self._sim.kv_bytes_per_token + self._sim.scratch_bytes)
+            error = self._sim.request_error(request)
+            if error:
+                raise ValueError(f'request {request.request_id}: {error}')
+            peak = self._sim.peak_workspace(request)
             if peak > max(self._sim.gpus.values()):
                 raise ValueError(f'request {request.request_id} peak workspace exceeds every GPU capacity')
         self.seed = seed
@@ -174,6 +183,8 @@ class PolicyEnvironment:
         if work.allocated:
             raise IllegalAction('request is already allocated')
         queue = s.queues[work.destination]
+        if s.max_active_requests is not None and sum(w.allocated for w in queue) >= s.max_active_requests:
+            raise IllegalAction('active-request capacity is exhausted')
         if next(w for w in queue if not w.allocated) is not work:
             raise IllegalAction('admission must respect device FCFS order')
         source = action.source
@@ -186,11 +197,12 @@ class PolicyEnvironment:
                         'cpu_reload' if source == 'cpu' else 'remote')
             if source not in s.directory.capacities or action.mode != expected:
                 raise IllegalAction('acquisition mode/source mismatch')
-            copy = s.directory.valid(work.request.prefix_key, source, s.now)
+            copy, _ = s.directory.best_prefix(work.request, source, s.now)
             if copy is None:
                 raise IllegalAction('prefix source is not valid and ready')
-        private = 0 if action.mode == 'local' else len(work.request.prefix_token_ids) * s.kv_bytes_per_token
-        required = private + 3 * s.beam_width * s.kv_bytes_per_token + s.scratch_bytes
+        private = (0 if action.mode == 'local' and copy.key == work.request.prefix_key
+                   else len(work.request.prefix_token_ids) * s.kv_bytes_per_token)
+        required = private + 3 * s.rows(work.request) * s.kv_bytes_per_token + s.scratch_bytes
         if not s.directory.can_fit(work.destination, required, protected=copy):
             raise IllegalAction('insufficient unpinned memory for acquisition')
 
@@ -220,7 +232,10 @@ class PolicyEnvironment:
             aged = sorted((r for r in self._pending.values() if self._aged(r)), key=self._order)
             if aged and request is not aged[0]:
                 raise IllegalAction('oldest aged request must be routed first')
-            peak = (len(request.prefix_token_ids) + 3 * s.beam_width) * s.kv_bytes_per_token + s.scratch_bytes
+            error = s.request_error(request)
+            if error:
+                raise IllegalAction(error)
+            peak = s.peak_workspace(request)
             if peak > s.gpus[action.destination]:
                 raise IllegalAction('request peak workspace exceeds destination capacity')
         elif isinstance(action, AcquireAction):
@@ -237,8 +252,9 @@ class PolicyEnvironment:
             batch = [works.get(i) for i in ids]
             if any(w is None or w.destination != action.destination or not w.allocated or not w.ready for w in batch):
                 raise IllegalAction('batch members must be ready on the destination')
-            if len({w.stage for w in batch}) != 1:
-                raise IllegalAction('batch members must have the same SID stage')
+            error = s.batch_error(batch)
+            if error:
+                raise IllegalAction(error)
             aged = sorted((w for w in s.queues[action.destination] if w.ready and self._aged(w.request)),
                           key=lambda w: self._order(w.request))
             if aged and aged[0] not in batch:
@@ -275,12 +291,13 @@ class PolicyEnvironment:
             if action.mode in ('recompute', 'local'):
                 return 0
             work = self._works()[action.request_id]
+            _, reused = s.directory.best_prefix(work.request, action.source, s.now)
             return s._transfer(action.source, work.destination,
-                               len(work.request.prefix_token_ids) * s.kv_bytes_per_token, estimate=True)
+                               reused * s.kv_bytes_per_token, estimate=True)
         if isinstance(action, BatchAction):
             works = self._works()
             batch = [works[i] for i in action.request_ids]
-            return s._duration(action.destination, s._graph(batch[0].stage, batch), estimate=True)
+            return s._batch_duration(action.destination, batch, estimate=True)
         raise IllegalAction('wait has no causal duration estimate')
 
     def _action_is_aged(self, action):
@@ -328,9 +345,11 @@ class PolicyEnvironment:
                 age = s.now - w.request.arrival_time_ns
                 requests.append(RequestObservation(w.request, w.destination, w.mode, w.source,
                                 w.stage, w.allocated, w.ready, age,
-                                w.request.budget_ns-age if w.request.budget_ns else None))
+                                w.request.budget_ns-age if w.request.budget_ns else None,
+                                w.cached_prefix_tokens))
         copies = tuple(CopyObservation(c.key, c.location, c.size_bytes, c.ready,
-                       s.directory.valid(c.key, c.location, s.now) is not None, c.pins, c.last_used_ns)
+                       s.directory.valid(c.key, c.location, s.now) is not None, c.pins, c.last_used_ns,
+                       c.prefix_token_ids)
                        for _, c in sorted(s.directory.copies.items()))
         devices = tuple(DeviceObservation(loc, cap, s.directory.used(loc), s.directory.workspace[loc],
                         s.busy_until.get(loc, 0) > s.now) for loc, cap in s.directory.capacities.items())
@@ -340,7 +359,9 @@ class PolicyEnvironment:
         if self._legal(WaitAction()):
             actions += (WaitAction(),)
         return Observation(s.now, tuple(requests), copies, devices, users, actions,
-                           tuple(r['request_id'] for r in s.responses), self.done)
+                           tuple(r['request_id'] for r in s.responses), self.done,
+                           s.execution_mode, s.max_batch_size, s.max_batch_rows,
+                           s.max_batch_tokens, s.beam_width)
 
     def _drain_current(self):
         s = self._sim
@@ -381,18 +402,7 @@ class PolicyEnvironment:
         elif isinstance(action, BatchAction):
             works = self._works()
             batch = [works[i] for i in action.request_ids]
-            duration = s._duration(action.destination, s._graph(batch[0].stage, batch))
-            for work in batch:
-                work.ready = False
-                if work.first_start_ns is None:
-                    work.first_start_ns = s.now
-            s.busy_until[action.destination] = s.now + duration
-            s._event(s.now + duration, 'batch', (action.destination, batch))
-            s.records.append(dict(event='batch_start', time_ns=s.now, destination=action.destination,
-                                  stage=batch[0].stage, request_ids=list(action.request_ids),
-                                  remaining_budget_ns=[None if not w.request.budget_ns else
-                                      w.request.budget_ns - (s.now - w.request.arrival_time_ns)
-                                      for w in batch], duration_ns=duration))
+            s._launch_batch(action.destination, batch)
         else:
             wakeups = [s.events[0][0]] if s.events else []
             wakeups.append(action.until_ns if action.until_ns is not None else s.now + self.max_wait_ns)

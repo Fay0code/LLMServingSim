@@ -61,7 +61,11 @@ uncalibrated synthetic timings; it does not change ordinary LLM scheduling.
 The separate `python -m serving.openonerec.astra_replay` command exports real
 Chakra stage graphs and supports isolated single-rank backend replay with
 explicitly synthetic durations. It is not concurrent policy-loop integration.
-See the [usage and integration limits](../docs/docs/simulator/openonerec.md).
+See the [usage and integration limits](../docs/docs/simulator/openonerec.md),
+[offline search](../docs/docs/simulator/openonerec-search.md) and
+[timing profiles](../docs/docs/simulator/openonerec-profiles.md).
+The Python interface supports stage, mixed-wave and fixed-step execution,
+row/token budgets and version-safe partial prefix reuse.
 
 ## Layout
 

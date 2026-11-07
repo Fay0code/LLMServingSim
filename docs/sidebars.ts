@@ -84,6 +84,8 @@ const sidebars: SidebarsConfig = {
         'simulator/architecture',
         'simulator/request-lifecycle',
         'simulator/openonerec',
+        'simulator/openonerec-search',
+        'simulator/openonerec-profiles',
         {
           type: 'category',
           label: 'Scheduling',

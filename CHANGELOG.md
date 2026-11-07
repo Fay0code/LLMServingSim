@@ -15,6 +15,9 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) co
   A separate synthetic serial replay exports real Chakra graphs through the
   existing graph generator and uses the Controller parser for backend reports,
   with an opt-in real-C++ serial replay smoke test.
+  Supports stage, mixed-wave and fixed-step batching with row/token budgets,
+  version-safe partial prefix reuse, timing-profile ingestion and finite-grid
+  policy search with tuning-only selection and separate holdout evaluation.
   See the [scope and usage](https://llmservingsim.ai/docs/simulator/openonerec).
 
 ### Fixed

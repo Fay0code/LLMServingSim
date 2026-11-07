@@ -53,7 +53,8 @@ Simulation and comparison against recorded benchmarks are **CPU-only**.
 GPU profiling and new benchmarks target **vLLM 0.31.0 / CUDA 13**.
 
 An opt-in [OpenOneRec policy frontend](https://llmservingsim.ai/docs/simulator/openonerec)
-provides synthetic lifecycle experiments; it is not a calibrated model.
+provides lifecycle experiments, offline routing/batching search and a timing-profile
+interface; bundled synthetic timings are not a calibrated model.
 
 CLI references: [simulator](https://llmservingsim.ai/docs/reference/cli-flags),
 [profiler](https://llmservingsim.ai/docs/profiler/running#calling-python--m-profiler-directly),
