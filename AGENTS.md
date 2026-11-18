@@ -2813,6 +2813,10 @@ Do not promise an output length or EOS behavior from the penalty alone.
 
 ## Commit & Pull Request Guidelines
 
+Research decks in `presentations/` are downloadable proposal documents. Keep
+their proposed mechanisms distinct from implemented simulator capabilities and
+validated performance results when updating references to them.
+
 - Short imperative commit messages: `Fix incorrect evict_size accumulation`,
   `Add Qwen3 model support`
 - Keep commits focused — one logical change per commit

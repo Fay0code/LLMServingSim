@@ -63,6 +63,8 @@ for measured accuracy and benchmark configurations.
 
 ## Publications
 
+Research presentation: [FFN pruning proposal (Chinese, PPTX)](presentations/ffn-pruning-patent-proposal.pptx), a proposed design rather than validated simulator functionality.
+
 **ISPASS 2026**  
 *LLMServingSim 2.0: A Unified Simulator for Heterogeneous and Disaggregated LLM Serving Infrastructure*  
 Jaehong Cho<sup>\*</sup>, Hyunmin Choi<sup>\*</sup>, Guseul Heo, Jongse Park (KAIST) [[Paper]](https://doi.org/10.1109/ISPASS69572.2026.00012)  
