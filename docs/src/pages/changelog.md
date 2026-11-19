@@ -10,6 +10,9 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) co
 
 ### Added
 
+- Standalone FFN pruning workflow and before-and-after PNG figures in
+  `presentations/`, illustrating the independent proposal without claiming
+  measured hardware performance or simulator integration.
 - Downloadable [FFN pruning proposal slides](https://github.com/Fay0code/LLMServingSim/blob/main/presentations/ffn-pruning-patent-proposal.pptx)
   in Chinese, describing a parameter-count lower bound and profiling feedback.
   This research proposal does not add simulator functionality or validated results.

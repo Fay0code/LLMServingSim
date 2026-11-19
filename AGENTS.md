@@ -2816,6 +2816,8 @@ Do not promise an output length or EOS behavior from the penalty alone.
 Research decks in `presentations/` are downloadable proposal documents. Keep
 their proposed mechanisms distinct from implemented simulator capabilities and
 validated performance results when updating references to them.
+Accompanying FFN figures are independent proposal illustrations; do not describe
+their hardware block examples as measurements or simulator capabilities.
 
 - Short imperative commit messages: `Fix incorrect evict_size accumulation`,
   `Add Qwen3 model support`
