@@ -10,6 +10,9 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) co
 
 ### Added
 
+- Editable [ServingStudio architecture diagrams](https://github.com/Fay0code/LLMServingSim/blob/main/presentations/servingstudio-architecture-six-pages.drawio)
+  in Chinese, covering Agent roles, feedback workflows, skills, evaluation and
+  memory. These document an external project; no simulator integration is added.
 - Downloadable [FFN pruning proposal slides](https://github.com/Fay0code/LLMServingSim/blob/main/presentations/ffn-pruning-patent-proposal.pptx)
   in Chinese, describing a parameter-count lower bound and profiling feedback.
   This research proposal does not add simulator functionality or validated results.
