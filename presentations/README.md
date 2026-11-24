@@ -18,7 +18,11 @@ overview, Agent runtime, role contracts, optimization workflow, skills and tools
 and evaluation and memory. The revised overview identifies optional subagents
 and persistent state, and the workflow shows implementation-review feedback. Page two
 keeps the original role layout and adds a compact validation-feedback loop.
-Simulator or benchmark results inform the orchestrator's next implementation task.
+The orchestrator specifies the task scope and invokes validation; a separate data
+arrow shows that validation consumes the implementer's edited artifacts. Simulator
+or benchmark results inform the orchestrator's next implementation task. This
+validation ownership follows the optimization skill; other skills may delegate
+validation differently. The driver does not run a simulator automatically on handoff.
 
 ![Agent handoff and validation workflow](servingstudio-agent-validation-flow.png)
 

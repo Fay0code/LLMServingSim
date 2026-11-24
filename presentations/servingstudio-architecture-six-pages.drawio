@@ -156,7 +156,7 @@
         <mxCell id="handoff" edge="1" parent="1" source="impl" target="orch" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2864BC;exitX=0.0;exitY=0.7777777777777778;exitDx=0;exitDy=0;entryX=1.0;entryY=0.7777777777777778;entryDx=0;entryDy=0;dashed=0;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="sub" edge="1" parent="1" source="impl" target="subs" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#6B7484;exitX=0.49894736842105264;exitY=1.0;exitDx=0;exitDy=0;entryX=0.49894736842105264;entryY=0.0;entryDx=0;entryDy=0;dashed=1;">
+        <mxCell id="sub" edge="1" parent="1" source="impl" target="subs" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2864BC;exitX=0.49894736842105264;exitY=1.0;exitDx=0;exitDy=0;entryX=0.49894736842105264;entryY=0.0;entryDx=0;entryDy=0;dashed=0;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="end" edge="1" parent="1" source="orch" target="exit" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2864BC;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;dashed=0;">
@@ -177,10 +177,13 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="title" value="默认双角色：委派实现，读取反馈，再决定下一步" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=38;fontColor=#152C48;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
+        <mxCell id="artifact_input" edge="1" parent="1" source="subs" target="verify" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#6B7484;exitX=0.49894736842105264;exitY=1.0;exitDx=0;exitDy=0;entryX=0.7385714285714285;entryY=0.0;entryDx=0;entryDy=0;dashed=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="目标 → 实现 → 验证：区分调用关系与修改产物" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=38;fontColor=#152C48;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
           <mxGeometry x="55" y="25" width="1690" height="62" as="geometry" />
         </mxCell>
-        <mxCell id="subtitle" value="沿用原来的角色交接图；只补充修改策略后的验证与反馈，不展开验证工具内部流程。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=#51647B;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
+        <mxCell id="subtitle" value="沿用双角色布局；以优化工作流为例。实线表示交接 / 调用，灰色虚线表示验证工具读取修改产物。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=#51647B;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
           <mxGeometry x="55" y="95" width="1690" height="48" as="geometry" />
         </mxCell>
         <mxCell id="input" value="&lt;b&gt;User / HTTP API&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;发送当前请求；运行时找到 workspace、conversation、turn 与角色 session&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#EEF5FF;fontSize=25;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
@@ -192,19 +195,19 @@
         <mxCell id="driver" value="&lt;b&gt;Driver + TurnService&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;解释 action；保存事件；控制交接与恢复&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#EAF1FF;fontSize=25;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
           <mxGeometry x="385" y="80" width="485" height="95" as="geometry" />
         </mxCell>
-        <mxCell id="orch" value="&lt;b&gt;Orchestrator&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;读 skills / 计划 / 证据，选下一步&lt;br&gt;委派任务；根据验证反馈继续修改或结束&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=28;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
+        <mxCell id="orch" value="&lt;b&gt;Orchestrator&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;指定修改目标、代码范围与验收要求&lt;br&gt;审查 summary / 改动，再运行验证并决策&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=28;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
           <mxGeometry x="45" y="255" width="490" height="135" as="geometry" />
         </mxCell>
-        <mxCell id="impl" value="&lt;b&gt;Implementer&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:21px;color:#51647B;'&gt;使用独立 session 执行 task&lt;br&gt;修改代码 / 策略，返回 summary&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=28;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
+        <mxCell id="impl" value="&lt;b&gt;Implementer&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:21px;color:#51647B;'&gt;按 task 修改指定代码 / 策略，返回摘要&lt;br&gt;独立任务可按需使用 CLI 子 Agent&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=28;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
           <mxGeometry x="725" y="255" width="475" height="135" as="geometry" />
         </mxCell>
-        <mxCell id="delegatelabel" value="任务 / 修改意见" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=19;fontColor=#2864BC;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
+        <mxCell id="delegatelabel" value="目标 / 范围 / 要求" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#2864BC;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
           <mxGeometry x="545" y="245" width="170" height="40" as="geometry" />
         </mxCell>
         <mxCell id="handofflabel" value="summary" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=19;fontColor=#2864BC;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
           <mxGeometry x="540" y="320" width="180" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="subs" value="&lt;b&gt;可选 CLI 子 Agent&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;Implementer 内部按需并行&lt;br&gt;独立写任务用 worktree；数量不固定&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#6B7484;fillColor=#F6F7F9;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
+        <mxCell id="subs" value="&lt;b&gt;修改产物（工作区）&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:21px;color:#51647B;'&gt;实际变更的代码 / 配置 / 策略&lt;br&gt;summary 只是说明，不是完整代码&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#6B7484;fillColor=#F6F7F9;fontSize=25;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
           <mxGeometry x="725" y="470" width="475" height="115" as="geometry" />
         </mxCell>
         <mxCell id="exit" value="&lt;b&gt;结束当前 turn&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;final_answer：完成结果&lt;br&gt;request_user_input：确实需要用户输入&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=25;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
@@ -222,13 +225,13 @@
         <mxCell id="singlecaveat" value="注意特定 skill 的边界：&lt;br&gt;真实框架优化 skill&lt;br&gt;另要求独立代码写作角色，&lt;br&gt;与 single 通用说明有冲突。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontColor=#AA6325;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="single">
           <mxGeometry x="30" y="530" width="345" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="foot" value="summary 是实现摘要；工具结果是验证证据。Orchestrator 结合两者，再给 Implementer 修改意见或结束；验证路径按任务选择。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=17;fontColor=#51647B;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
+        <mxCell id="foot" value="按优化 skill 的职责绘制：Implementer 写代码，Orchestrator 跑正式验证。其他任务可按 skill 委派验证；Driver 只负责交接，不会自动运行仿真。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=17;fontColor=#51647B;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
           <mxGeometry x="55" y="1110" width="1690" height="34" as="geometry" />
         </mxCell>
-        <mxCell id="verify" value="&lt;b&gt;运行验证并获取结果（工具，不是 Agent）&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:21px;color:#51647B;'&gt;Simulator / benchmark 等提供反馈&lt;br&gt;例如：性能指标、正确性检查结果&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#087E83;fillColor=#E8F6F3;fontSize=25;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
+        <mxCell id="verify" value="&lt;b&gt;运行验证（Orchestrator 发起）&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;读取修改产物，调用适用的 Simulator / benchmark 等&lt;br&gt;返回性能指标、正确性检查结果&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#087E83;fillColor=#E8F6F3;fontSize=25;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
           <mxGeometry x="445" y="620" width="700" height="105" as="geometry" />
         </mxCell>
-        <mxCell id="verifylabel" value="触发&lt;br&gt;验证" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontColor=#087E83;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
+        <mxCell id="verifylabel" value="发起&lt;br&gt;验证" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontColor=#087E83;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
           <mxGeometry x="555" y="490" width="85" height="65" as="geometry" />
         </mxCell>
         <mxCell id="newfeedbacklabel" value="新结果反馈给 Orchestrator" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=#087E83;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
@@ -236,6 +239,12 @@
         </mxCell>
         <mxCell id="done_label" value="完成后结束" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=19;fontColor=#2864BC;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
           <mxGeometry x="80" y="415" width="165" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="write_artifact" value="写入指定位置" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=19;fontColor=#2864BC;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
+          <mxGeometry x="995" y="415" width="175" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="artifact_label" value="作为运行输入" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#6B7484;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="dual">
+          <mxGeometry x="990" y="588" width="200" height="28" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
