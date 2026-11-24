@@ -346,125 +346,157 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="outer" value="" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#F2F7FD;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1">
-          <mxGeometry x="55" y="290" width="1690" height="685" as="geometry" />
+        <mxCell id="tick" value="" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#087E83;fillColor=#EFF9F6;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1">
+          <mxGeometry x="95" y="160" width="1620" height="260" as="geometry" />
         </mxCell>
-        <mxCell id="tick" value="" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#087E83;fillColor=#EFF9F6;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="outer">
-          <mxGeometry x="35" y="85" width="330" height="485" as="geometry" />
+        <mxCell id="tock" value="" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#EEF4FF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1">
+          <mxGeometry x="95" y="465" width="1620" height="290" as="geometry" />
         </mxCell>
-        <mxCell id="tock" value="" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#EEF4FF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="outer">
-          <mxGeometry x="405" y="85" width="780" height="485" as="geometry" />
+        <mxCell id="probe" value="" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#AA6325;fillColor=#FFF7ED;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="1">
+          <mxGeometry x="95" y="800" width="1620" height="260" as="geometry" />
         </mxCell>
-        <mxCell id="probe" value="" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#AA6325;fillColor=#FFF7ED;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;container=1;collapsible=0;recursiveResize=0;" vertex="1" parent="outer">
-          <mxGeometry x="1225" y="85" width="425" height="485" as="geometry" />
-        </mxCell>
-        <mxCell id="tick_detail" edge="1" parent="1" source="simulate" target="brief" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#087E83;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;dashed=0;">
+        <mxCell id="t1" edge="1" parent="1" source="prepare" target="simulate" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#087E83;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="handoff" edge="1" parent="1" source="patch" target="check" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2864BC;exitX=1.0;exitY=0.48148148148148145;exitDx=0;exitDy=0;entryX=0.0;entryY=0.48148148148148145;entryDx=0;entryDy=0;dashed=0;">
+        <mxCell id="t2" edge="1" parent="1" source="simulate" target="analyze" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#087E83;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="repair" edge="1" parent="1" source="check" target="patch" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#AA6325;exitX=0.22580645161290322;exitY=1.0;exitDx=0;exitDy=0;entryX=0.5;entryY=1.0;entryDx=0;entryDy=0;dashed=0;">
+        <mxCell id="t3" edge="1" parent="1" source="analyze" target="freeze" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#087E83;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="to_tock" edge="1" parent="1" source="freeze" target="patch" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2864BC;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0;entryDx=0;entryDy=0;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="summary" edge="1" parent="1" source="patch" target="review" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2864BC;exitX=0.0;exitY=0.5;exitDx=0;exitDy=0;entryX=1.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="runcheck" edge="1" parent="1" source="review" target="correct" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2864BC;exitX=0.0;exitY=0.5;exitDx=0;exitDy=0;entryX=1.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="passed" edge="1" parent="1" source="correct" target="benchmark" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2864BC;exitX=0.0;exitY=0.5;exitDx=0;exitDy=0;entryX=1.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="repair" edge="1" parent="1" source="correct" target="patch" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#AA6325;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.5;entryY=1.0;entryDx=0;entryDy=0;dashed=0;">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="960" y="640" />
-              <mxPoint x="645" y="640" />
+              <mxPoint x="700" y="735" />
+              <mxPoint x="1520" y="735" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="pass" edge="1" parent="1" source="check" target="measure" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2864BC;exitX=0.7903225806451613;exitY=1.0;exitDx=0;exitDy=0;entryX=0.7903225806451613;entryY=0.0;entryDx=0;entryDy=0;dashed=0;">
+        <mxCell id="to_probe" edge="1" parent="1" source="benchmark" target="readresult" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#AA6325;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="290" y="780" />
+              <mxPoint x="115" y="780" />
+              <mxPoint x="115" y="945" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p1" edge="1" parent="1" source="readresult" target="evidence" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#AA6325;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="tt" edge="1" parent="1" source="brief" target="patch" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#2864BC;exitX=1.0;exitY=0.4782608695652174;exitDx=0;exitDy=0;entryX=0.0;entryY=0.4962962962962963;entryDx=0;entryDy=0;dashed=0;">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="440" y="715" />
-              <mxPoint x="440" y="527" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="tp" edge="1" parent="1" source="measure" target="attribute" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#AA6325;exitX=1.0;exitY=0.49411764705882355;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1260" y="777" />
-              <mxPoint x="1260" y="525" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="probe_detail" edge="1" parent="1" source="attribute" target="decide" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#AA6325;exitX=0.4987012987012987;exitY=1.0;exitDx=0;exitDy=0;entryX=0.4987012987012987;entryY=0.0;entryDx=0;entryDy=0;dashed=0;">
+        <mxCell id="p2" edge="1" parent="1" source="evidence" target="explain" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#AA6325;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="feedback" edge="1" parent="1" source="decide" target="simulate" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#087E83;exitX=0.4987012987012987;exitY=1.0;exitDx=0;exitDy=0;entryX=0.0;entryY=0.4074074074074074;entryDx=0;entryDy=0;dashed=0;">
+        <mxCell id="p3" edge="1" parent="1" source="explain" target="decide" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#AA6325;exitX=1.0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="next_tick" edge="1" parent="1" source="decide" target="prepare" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2.4;strokeColor=#087E83;exitX=0.5;exitY=1.0;exitDx=0;exitDy=0;entryX=0.0;entryY=0.5;entryDx=0;entryDy=0;dashed=0;">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="1492" y="935" />
-              <mxPoint x="75" y="935" />
-              <mxPoint x="75" y="510" />
+              <mxPoint x="1520" y="1100" />
+              <mxPoint x="55" y="1100" />
+              <mxPoint x="55" y="305" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="title" value="工作流：先实现并检查，再测量，最后解释效果" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=38;fontColor=#152C48;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
+        <mxCell id="title" value="ServingStudio 工作流：Tick → Tock → Probe" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=38;fontColor=#152C48;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
           <mxGeometry x="55" y="25" width="1690" height="62" as="geometry" />
         </mxCell>
-        <mxCell id="subtitle" value="Tock 内有“实现 → 检查 → 反馈修复”小循环；Probe 判断本轮优化是否有效，不是等到 Probe 才检查代码对不对。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=#51647B;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
+        <mxCell id="subtitle" value="按编号沿箭头阅读；Agent 指 Orchestrator，Implementer 单独标出。Analyzer 是分析工具，不是另一个 Agent。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=#51647B;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
           <mxGeometry x="55" y="95" width="1690" height="48" as="geometry" />
         </mxCell>
-        <mxCell id="contract" value="&lt;b&gt;固定本轮目标与验证标准&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;一个优化假设；可信 correctness 与 benchmark 保持不变；修复实现不等于偷偷更换优化目标&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#EEF5FF;fontSize=26;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
-          <mxGeometry x="55" y="165" width="1690" height="85" as="geometry" />
+        <mxCell id="ticklabel" value="Tick  →  用仿真证据确定一个修改任务" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=25;fontColor=#087E83;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="tick">
+          <mxGeometry x="22" y="15" width="1576" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="outerlabel" value="外层由 Orchestrator 协调：提出任务 → 收到 summary → 检查 / 测量 → 反馈或决策" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=25;fontColor=#2864BC;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="outer">
-          <mxGeometry x="22" y="15" width="1646" height="40" as="geometry" />
+        <mxCell id="prepare" value="&lt;b&gt;1  Agent：准备仿真&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:21px;color:#51647B;'&gt;指定模型 / 负载 / 硬件&lt;br&gt;确认仿真支持范围&lt;br&gt;调用仿真工具&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#087E83;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tick">
+          <mxGeometry x="35" y="70" width="320" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="ticklabel" value="1  Tick：确定怎么改" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=25;fontColor=#087E83;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="tick">
-          <mxGeometry x="22" y="15" width="286" height="40" as="geometry" />
+        <mxCell id="simulate" value="&lt;b&gt;2  ServingStudio Sim&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:21px;color:#51647B;'&gt;执行仿真 / 时间预测&lt;br&gt;生成运行日志与成本数据&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#087E83;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tick">
+          <mxGeometry x="445" y="70" width="320" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="simulate" value="&lt;b&gt;仿真与分析&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:19px;color:#51647B;'&gt;Orchestrator 调用工具&lt;br&gt;Analyzer 是非 Agent 程序&lt;br&gt;读取成本与性能证据&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#087E83;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tick">
-          <mxGeometry x="20" y="80" width="290" height="135" as="geometry" />
+        <mxCell id="analyze" value="&lt;b&gt;3  Analyzer&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;读取仿真产物&lt;br&gt;输出吞吐 / 延迟 / KV 等报告&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#087E83;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tick">
+          <mxGeometry x="855" y="70" width="320" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="brief" value="&lt;b&gt;冻结一个任务&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:19px;color:#51647B;'&gt;假设 / 修改范围 / 不变量&lt;br&gt;预期效果 / 验证命令&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#087E83;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tick">
-          <mxGeometry x="20" y="285" width="290" height="115" as="geometry" />
+        <mxCell id="freeze" value="&lt;b&gt;4  Agent：选定改动&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:21px;color:#51647B;'&gt;解读报告，冻结一个假设&lt;br&gt;明确修改范围与验收要求&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#087E83;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tick">
+          <mxGeometry x="1265" y="70" width="320" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="tocklabel" value="2  Tock：把改动做对，并测出结果" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=25;fontColor=#2864BC;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
-          <mxGeometry x="22" y="15" width="736" height="40" as="geometry" />
+        <mxCell id="runlabel" value="调用" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#087E83;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="tick">
+          <mxGeometry x="360" y="101" width="80" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="patch" value="&lt;b&gt;Implementer 写 / 修代码&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:19px;color:#51647B;'&gt;实际改动保存在工作区&lt;br&gt;summary 说明改了什么&lt;br&gt;附检查结果与剩余问题&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=22;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
-          <mxGeometry x="30" y="85" width="310" height="135" as="geometry" />
+        <mxCell id="logslabel" value="日志" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#087E83;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="tick">
+          <mxGeometry x="770" y="101" width="80" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="check" value="&lt;b&gt;Orchestrator 检查&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:19px;color:#51647B;'&gt;读 summary + 审查 diff&lt;br&gt;运行可信 correctness&lt;br&gt;检查是否满足本轮要求&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
-          <mxGeometry x="430" y="85" width="310" height="135" as="geometry" />
+        <mxCell id="reportlabel" value="报告" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#087E83;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="tick">
+          <mxGeometry x="1180" y="101" width="80" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="tocklabel" value="Tock  ←  实现本轮改动，检查正确性并测量" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=25;fontColor=#2864BC;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
+          <mxGeometry x="22" y="15" width="1576" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="patch" value="&lt;b&gt;5  Implementer：实现&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;按任务修改代码 / 策略&lt;br&gt;工作区保留修改产物&lt;br&gt;返回 summary 与检查证据&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
+          <mxGeometry x="1265" y="75" width="320" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="review" value="&lt;b&gt;6  Agent：审查改动&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:21px;color:#51647B;'&gt;读取 summary 与实际 diff&lt;br&gt;启动可信检查 / 验证命令&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
+          <mxGeometry x="855" y="75" width="320" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="correct" value="&lt;b&gt;7  正确性检查&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:21px;color:#51647B;'&gt;运行修改后的代码&lt;br&gt;检查输出与本轮约束&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
+          <mxGeometry x="445" y="75" width="320" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="benchmark" value="&lt;b&gt;8  Benchmark 测量&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;Agent 发起标准性能测试&lt;br&gt;保存吞吐 / 延迟等实测结果&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
+          <mxGeometry x="35" y="75" width="320" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="tasklabel" value="task：委派实现" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#2864BC;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
+          <mxGeometry x="1535" y="423" width="150" height="30" as="geometry" />
         </mxCell>
         <mxCell id="summarylabel" value="summary" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=17;fontColor=#2864BC;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
-          <mxGeometry x="345" y="105" width="80" height="30" as="geometry" />
+          <mxGeometry x="1178" y="107" width="85" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="repairlabel" value="未通过：反馈错误 / 失败样例，可再次 delegate 修复" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=19;fontColor=#AA6325;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
-          <mxGeometry x="30" y="277" width="585" height="45" as="geometry" />
+        <mxCell id="checklabel" value="运行" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#2864BC;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
+          <mxGeometry x="770" y="107" width="80" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="repairnote" value="&lt;b&gt;同一 trial 内修复&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:18px;color:#51647B;'&gt;若更换优化假设，要回到 Tick&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=22;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
-          <mxGeometry x="30" y="360" width="310" height="85" as="geometry" />
+        <mxCell id="passlabel" value="通过" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#2864BC;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
+          <mxGeometry x="360" y="107" width="80" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="measure" value="&lt;b&gt;Orchestrator 测量性能&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:18px;color:#51647B;'&gt;跑 benchmark；记录吞吐 / 延迟&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#FFFFFF;fontSize=22;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
-          <mxGeometry x="430" y="360" width="310" height="85" as="geometry" />
+        <mxCell id="repairlabel" value="未通过：Agent 反馈失败原因 → 再委派 Implementer 修复" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=19;fontColor=#AA6325;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
+          <mxGeometry x="645" y="232" width="690" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="passlabel" value="正确性通过后" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=19;fontColor=#2864BC;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="tock">
-          <mxGeometry x="490" y="310" width="170" height="32" as="geometry" />
+        <mxCell id="probelabel" value="Probe  →  解释结果，决定是否保留，再进入下一轮" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=25;fontColor=#AA6325;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="probe">
+          <mxGeometry x="22" y="15" width="1576" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="probelabel" value="3  Probe：判断是否有效" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=25;fontColor=#AA6325;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="probe">
-          <mxGeometry x="22" y="15" width="381" height="40" as="geometry" />
+        <mxCell id="readresult" value="&lt;b&gt;9  Agent：核对结果&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;读取实测结果与仿真目标&lt;br&gt;先核对比较前提与偏差方向&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#AA6325;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="probe">
+          <mxGeometry x="35" y="70" width="320" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="attribute" value="&lt;b&gt;解释测得的效果&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:19px;color:#51647B;'&gt;是否真的更快？原因是什么？&lt;br&gt;有无噪声 / 混杂 / 未解释差异？&lt;br&gt;必要时 profiling 或诊断插桩&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#AA6325;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="probe">
-          <mxGeometry x="20" y="80" width="385" height="140" as="geometry" />
+        <mxCell id="evidence" value="&lt;b&gt;10  分析 / 诊断工具&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;优先读取已有分析产物&lt;br&gt;不足时再 profiling / 采样&lt;br&gt;返回对齐结果与诊断证据&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#AA6325;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="probe">
+          <mxGeometry x="445" y="70" width="320" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="decide" value="&lt;b&gt;保留 / 拒绝 / 证据不足&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:19px;color:#51647B;'&gt;评价优化效果与因果解释&lt;br&gt;不是首次做代码正确性检查&lt;br&gt;本轮闭合后才选择下个优化&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#AA6325;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="probe">
-          <mxGeometry x="20" y="315" width="385" height="130" as="geometry" />
+        <mxCell id="explain" value="&lt;b&gt;11  Agent：解释差异&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;区分算子 / 批形状差异&lt;br&gt;与调度 / 框架开销&lt;br&gt;说明收益或退化来自哪里&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#AA6325;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="probe">
+          <mxGeometry x="855" y="70" width="320" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="feedbacklabel" value="外层反馈：Probe 结束 → 带着实测证据回 Tick，选择下一项优化（不会在 Probe 偷加新优化）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=21;fontColor=#087E83;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="outer">
-          <mxGeometry x="155" y="595" width="1450" height="32" as="geometry" />
+        <mxCell id="decide" value="&lt;b&gt;12  Agent：记录决策&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:21px;color:#51647B;'&gt;保留 / 拒绝 / 证据不足&lt;br&gt;记录证据与剩余优化空间&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#AA6325;fillColor=#FFFFFF;fontSize=24;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="probe">
+          <mxGeometry x="1265" y="70" width="320" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="diagnostic" value="&lt;b&gt;Probe 也可委派诊断代码：Orchestrator 提问题 → Implementer 加插桩 → Orchestrator 采样和解释&lt;/b&gt;&lt;br&gt;&lt;span style='font-size:20px;color:#51647B;'&gt;这是单独的、尽量不改变行为的诊断改动；新的性能优化仍需进入下一轮 Tick / Tock。&lt;/span&gt;" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;spacing=12;strokeWidth=1.8;strokeColor=#2864BC;fillColor=#EEF5FF;fontSize=23;fontColor=#152C48;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
-          <mxGeometry x="55" y="1005" width="1690" height="75" as="geometry" />
+        <mxCell id="measuredlabel" value="实测结果（Tock 在测量后结束）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#AA6325;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
+          <mxGeometry x="310" y="762" width="290" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="foot" value="依据 top-compose-real-framework-from-sim 与角色 handoff 指令；修复回路表示可再次委派，不是程序强制无限重试或必然通过。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=17;fontColor=#51647B;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
-          <mxGeometry x="55" y="1110" width="1690" height="34" as="geometry" />
+        <mxCell id="probecall" value="调用" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#AA6325;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="probe">
+          <mxGeometry x="360" y="101" width="80" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="proberesult" value="证据" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontColor=#AA6325;fontStyle=0;fontFamily=Arial Unicode MS;" vertex="1" parent="probe">
+          <mxGeometry x="770" y="101" width="80" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="nextlabel" value="本轮闭合后：带着实测证据返回 Tick，重新仿真并选择下一项优化" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=21;fontColor=#087E83;fontStyle=1;fontFamily=Arial Unicode MS;" vertex="1" parent="1">
+          <mxGeometry x="360" y="1065" width="1080" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

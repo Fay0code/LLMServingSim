@@ -26,6 +26,13 @@ validation differently. The driver does not run a simulator automatically on han
 
 ![Agent handoff and validation workflow](servingstudio-agent-validation-flow.png)
 
+Page four expands the Tick–Tock–Probe workflow into numbered steps: Agent →
+ServingStudio Sim → Analyzer → Agent, then implementation, correctness checks,
+benchmark measurement and attribution. It shows both the implementation repair
+loop and the return to Tick after a recorded Probe decision.
+
+![Expanded Tick–Tock–Probe workflow](servingstudio-tick-tock-probe-workflow.png)
+
 This Chinese-language source walkthrough documents an external project. It does
 not implement ServingStudio integration or claim measured performance gains in
 LLMServingSim. It was reviewed on November 24, 2026 against the revisions pinned
