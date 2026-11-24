@@ -26,8 +26,8 @@ validation differently. The driver does not run a simulator automatically on han
 
 ![Agent handoff and validation workflow](servingstudio-agent-validation-flow.png)
 
-Page four uses a vertical, top-to-bottom Tick–Tock–Probe workflow with named
-roles: Orchestrator → ServingStudio Sim → Analyzer → Orchestrator, then
+Page four places Tick, Tock and Probe side by side, with each stage unfolding
+vertically from top to bottom. The workflow names each role: Orchestrator → ServingStudio Sim → Analyzer → Orchestrator, then
 Implementer, correctness checks,
 benchmark measurement and attribution. It shows both the implementation repair
 loop and the return to Tick after a recorded Probe decision.

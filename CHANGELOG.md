@@ -11,7 +11,8 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) co
   in Chinese, covering Agent roles, feedback workflows, skills, evaluation and
   memory, with a compact strategy-validation feedback loop distinguishing task
   scope, edited artifacts and validation ownership, plus an expanded numbered
-  vertical Tick–Tock–Probe workflow with explicit role names and PNG previews. These document an external project;
+  Tick–Tock–Probe workflow with side-by-side stages, vertical steps, explicit
+  role names and PNG previews. These document an external project;
   no simulator integration is added.
 - Downloadable [FFN pruning proposal slides](https://github.com/Fay0code/LLMServingSim/blob/main/presentations/ffn-pruning-patent-proposal.pptx)
   in Chinese, describing a parameter-count lower bound and profiling feedback.
