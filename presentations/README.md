@@ -16,7 +16,11 @@ review and professional review.
 Open the file in diagrams.net or draw.io; the page tabs contain the project
 overview, Agent runtime, role contracts, optimization workflow, skills and tools,
 and evaluation and memory. The revised overview identifies optional subagents
-and persistent state, and the workflow shows implementation-review feedback.
+and persistent state, and the workflow shows implementation-review feedback. Page two
+distinguishes rerunning a modified simulator from benchmarking a modified real
+framework, then routes new evidence back to the orchestrator.
+
+![Agent handoff and validation workflow](servingstudio-agent-validation-flow.png)
 
 This Chinese-language source walkthrough documents an external project. It does
 not implement ServingStudio integration or claim measured performance gains in

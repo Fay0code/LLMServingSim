@@ -65,7 +65,7 @@ for measured accuracy and benchmark configurations.
 
 Research presentation: [FFN pruning proposal (Chinese, PPTX)](presentations/ffn-pruning-patent-proposal.pptx), a proposed design rather than validated simulator functionality.
 
-Architecture reference: [ServingStudio source walkthrough (Chinese, editable draw.io)](presentations/servingstudio-architecture-six-pages.drawio). This documents an external project, not an LLMServingSim integration.
+Architecture reference: [ServingStudio source walkthrough (Chinese, editable draw.io)](presentations/servingstudio-architecture-six-pages.drawio). This documents an external project, not an LLMServingSim integration. [Preview the validation workflow](presentations/servingstudio-agent-validation-flow.png).
 
 **ISPASS 2026**  
 *LLMServingSim 2.0: A Unified Simulator for Heterogeneous and Disaggregated LLM Serving Infrastructure*  
