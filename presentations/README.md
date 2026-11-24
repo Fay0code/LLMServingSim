@@ -17,8 +17,8 @@ Open the file in diagrams.net or draw.io; the page tabs contain the project
 overview, Agent runtime, role contracts, optimization workflow, skills and tools,
 and evaluation and memory. The revised overview identifies optional subagents
 and persistent state, and the workflow shows implementation-review feedback. Page two
-distinguishes rerunning a modified simulator from benchmarking a modified real
-framework, then routes new evidence back to the orchestrator.
+keeps the original role layout and adds a compact validation-feedback loop.
+Simulator or benchmark results inform the orchestrator's next implementation task.
 
 ![Agent handoff and validation workflow](servingstudio-agent-validation-flow.png)
 
